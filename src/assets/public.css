@@ -1,0 +1,47 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+  width: 100%;
+  height: 100%;
+}
+.blank{
+height: 1rem;
+}
+.left{
+    text-align: left;
+}
+body{
+  line-height:1.0!important;
+}
+.size2rem{
+  font-size: 1.5rem;
+}
+.weui-cells__group_form .weui-cells:before, .weui-cells__group_form .weui-cell:before {
+  left: 0px!important; 
+   right:0px!important;
+}
+.weui-cells__group_form .weui-cells:after {
+  left: 0px;
+  right: 0px;
+}
+.weui-cells__group_form .weui-cells:before, .weui-cells__group_form .weui-cell:before {
+  left: 0px;
+  right: 0px;
+}
+
+.panel{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-around;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 0.3rem 0.5rem ;
+  background-color: white;
+}
+.content{
+  width: 90%;
+  margin-left: 5%;
+}

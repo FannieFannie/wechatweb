@@ -1,0 +1,186 @@
+
+.qiandao{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+}
+.gongsi{
+  margin: 0.2rem 0 0.5rem 0;
+}
+select{
+  height: 2rem;
+  width: 100%;
+}
+html {
+    height: 100%;
+  }
+  svg#icon-icon-test2 {
+    height: 1.5rem;
+    width: 100%;
+}
+  body {
+    line-height: 1.0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .content {
+    min-height: 90vh;
+    width: 90%;
+    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+  }
+ /* .icon{} */
+ .footer{
+     display: flex;
+     height: 8vh;
+     font-size: 12px;
+     box-shadow: 0 -3px 5px 0 rgb(0 0 0 / 0.05);
+     border-radius: 4px;
+     border: 1px solid #ebeef5;
+ }
+ .footer1,.footer2{
+     display: flex;
+     flex-direction:column;
+    width: 50%;
+    height: 8vh;
+    text-align: center;
+    justify-content: space-around;
+ }
+ svg.icon.svg-icon {
+    height: 2rem;
+    width:100%;
+}
+.home{
+  color:  #999;
+  font-size: 13.5px;
+}
+.footer i.iconfont {
+  font-size: 1.2rem;
+  height: 1.5rem;
+  display: inline-block;
+}
+
+.buqiandao{
+  display: block;
+margin-right: 1rem;
+margin-left: auto;
+width:3rem;
+}
+.weui-form__title{
+  font-size: 16px;
+  font-weight:400;
+  margin-top:1rem;
+margin-bottom: 1rem;
+
+}
+/*  */
+.weui-form__control-area {
+  margin: 0 0;
+}
+.weui-cells {
+  margin-top: 0px;}
+.map{
+  height: 15vh;
+  width: 100%;
+  margin: 0 auto;
+}
+i.iconfont.icon-weibiaoti--copy {
+  color: orange;
+  font-size: 8rem;
+}
+.size12px{
+  font-size: 12px;
+}
+.address{ 
+    padding-top: 1rem;
+    margin-bottom: 0.2rem;
+}
+.header{
+    color: rgba(0,0,0,0.7);
+    background-color: white;
+    margin: 0 auto;
+}
+
+.border{
+  border-bottom: solid 0.05rem rgb(0,0,0,0.5);
+}
+.router{
+  margin-right: 0;
+  margin-left:auto;
+  text-align: right;
+}
+.weui-cells__group_form .weui-cell {
+  padding: 1rem 0px;
+}
+.weui-cell_select-after.weui-cell_access .weui-cell__bd {
+   line-height: 1;
+}
+.weui-cells {
+  background-color: #fff;
+}
+.lastkuai{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 1;
+}
+.weui-form__control-area {
+  flex: 0;
+}
+.footer{
+  border-bottom-color: white;
+
+  background-color: white;
+}
+.weui-input{
+  height: 13.5px;
+  line-height: 1;}
+  .weui-cells__group_form{
+    padding: 0 1rem;
+    background-color: white;
+    border-radius: 8px;
+  }
+  .weui-cells__group_form .weui-cell__hd {
+    flex: 1;
+    padding-right: 0px;    
+  }
+  .bqd{
+    background-color: orange;
+    display: inline-block;
+    padding: 0 1rem;
+    line-height: 2.411765;
+    border-radius: 4px;
+    margin-left: 1rem;
+  }
+  .bqd a{
+    color: white;
+  }
+  select{
+    line-height:1.5rem;
+    border: none;
+    height:1.5rem;
+    outline: none;
+    background-color: transparent;
+  }
+  .spanSelect{
+    width: 80%;
+    border: solid 1px rgb(0,0,0,0.1);
+    height: 1.5rem;
+    border-radius: 4px;
+    line-height: 1.5rem;
+    display: inline-block;
+    padding-left: 0.5rem;
+  }
+  .weui-cell_access{
+     height:2rem; 
+     line-height: 2rem;
+  }
+  .parent{
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+  }

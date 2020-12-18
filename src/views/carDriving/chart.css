@@ -1,0 +1,50 @@
+:root{
+    --radius-size:4px;
+}
+*{
+    margin: 0;
+    padding: 0;
+}
+html,
+body
+{
+    height:100vh;
+    width: 100%;
+
+    background-color: #ccc;
+}
+#main{
+    padding: 1rem;
+}
+#firstDiv{
+    border-radius:5px;
+    background-color:#32b8e8;
+
+}
+#firstLeft,#firstRight{
+  flex:1;
+  box-sizing: border-box;
+  border-right: solid white 1px;
+  width: calc(50% - 0.5px);
+  display: inline-block;
+  height: 100%;
+  padding: 1rem;
+}
+
+.firstWrap{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: white;
+    padding: 0.3rem;
+}
+.secondWrap{
+    color: white;
+    height: 20vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.left1,.right1{
+  width:0px;
+  flex:1;  
+}
