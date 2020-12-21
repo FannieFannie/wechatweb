@@ -3,7 +3,7 @@
 </template>
 
 <script>
-
+import { MP } from "./map.js";
 // import { sort_ascii } from '../../../util/util.js'
 
 

@@ -76,12 +76,13 @@ export default {
     let code = window.location.search.split(/[?]|[&]|[=]/) && window.location.search.split(/[?]|[&]|[=]/)[2] ?
       window.location.search.split(/[?]|[&]|[=]/)[2] : '041fiVll2J1qd64GWbnl2Vf82V3fiVlp'
     this.$store.dispatch('setCode', code)
-    await getOath()
+    await this.getOath()
     let res = await getRoute();
     allVehicles = res.data
   },
   async getOath () {
     let data = await getOath(this.$store.state.authCode)
+    this.$store.dispatch('setUserInfo',data.userInfo)
     this.$store.dispatch('setToken', data.access_token)
   }
 };

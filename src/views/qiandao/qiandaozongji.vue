@@ -49,12 +49,10 @@
 // import { Options, Vue } from 'vue-class-component'
 // import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 import { TimeF } from '../../util/util.js'
-import { getticket } from "../../http/api.js";
-import { MP } from "./map.js";
-import { hash_sha1, getString } from "../../../util/util";
+// import { getticket } from "../../http/api.js";
+
 
 export default {
-
   data () {
     return {
       svgColor: '#336699',
@@ -97,12 +95,7 @@ export default {
       this.svgColor = '#336699'
       this.$router.push({ name: 'qiandao' })
     },
-    qiandaoEvent () {
-      this.$weui.toast('签到成功', {
-        duration: 3000,
-        className: 'bears'
-      })
-    },
+   
     Time (a, b) {
       return TimeF(a, b)
     }

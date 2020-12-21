@@ -55,13 +55,14 @@
 </template>
 
 <script>
+// import {  } from "module";
+// import { hash_sha1, getString } from "../../util/util";
 // import { Options, Vue } from 'vue-class-component'
 // import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-import { TimeF } from "../../util/util.js";
+import { TimeF,getWxconfig } from "../../util/util.js";
 import mapInit from "./map/mapinit.vue";
 import { signIn, getClosestKitchenList } from "../../http/api.js";
 
-// import buQiandao from './buqiandao.vue'
 export default {
   data () {
     return {
@@ -90,7 +91,15 @@ export default {
     //   debugger
     // },
     qiandaoEvent: async () => {
-      let data = {
+      await getWxconfig()
+      window.wx.ready(function(){
+         window.wx.getLocation({
+  type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+  success: async function (res) {
+    // var speed = res.speed; // 速度，以米/每秒计
+    // var accuracy = res.accuracy; // 位置精度
+    let data = {
+      latitude:res.latitude,longitude:res.longitude,accuracy: res.accuracy,
         access_token: this.$store.state.access_token,
         bins: document.getElementById('bins').getAttribute('value')
       }
@@ -99,6 +108,12 @@ export default {
         duration: 3000,
         className: "bears"
       });
+  }
+})
+      });
+      window.wx.error(function(res){
+        console.log(res)
+      })     
     },
     Time (a, b) {
       return TimeF(a, b);
