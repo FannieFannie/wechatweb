@@ -49,6 +49,7 @@
 // import { Options, Vue } from 'vue-class-component'
 // import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 import { TimeF } from '../../util/util.js'
+import { getOath } from "../../http";
 // import mapInit from './map/mapinit.vue'
 // import buQiandao from './buqiandao.vue'
 export default {
@@ -60,6 +61,10 @@ export default {
       color: '#999'
     }  },
   created () {
+    let code = window.location.search.split(/[?]|[&]|[=]/) && window.location.search.split(/[?]|[&]|[=]/)[2] ?
+      window.location.search.split(/[?]|[&]|[=]/)[2] : '061sC3ml2IObd640L1ll2YuhIf2sC3mm'
+    this.$store.dispatch('setCode', code)
+    getOath()
     this.showMap = true
   },
   mounted () {

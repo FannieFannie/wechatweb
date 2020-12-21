@@ -14,7 +14,7 @@ import getOath from "../views/qiandao/getOath.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  {path:'/getOath',name:'getOath',component:getOath},
+  { path: '/getOath', name: 'getOath', component: getOath },
   {
     path: "/",
     name: "Home",
@@ -50,5 +50,6 @@ const routes = [
 var router = new VueRouter({
   routes
 })
+
 console.log(router)
 export default router;
