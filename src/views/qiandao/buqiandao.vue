@@ -78,9 +78,9 @@ export default {
     // buQiandao
   },
   methods: {
-    qiandaofoot () {
-      debugger
-    },
+    // qiandaofoot () {
+    //   debugger
+    // },
     tongji () {
       this.$router.push({ name: 'tongji' })
     },

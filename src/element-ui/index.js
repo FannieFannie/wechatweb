@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import {
+  Input,
+  InputNumber,
   Select,
   Option,
   OptionGroup,
@@ -37,7 +39,8 @@ import {
 } from 'element-ui';
 
 
-
+Vue.use(Input);
+Vue.use(InputNumber);
 Vue.use(Select);
 Vue.use(Option);
 Vue.use(OptionGroup);

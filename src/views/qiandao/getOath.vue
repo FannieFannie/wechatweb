@@ -33,6 +33,7 @@
 <script>
 let allVehicles = []
 import { getRoute } from "../../http/api";
+import { getOath } from "../../http/api.js";
 export default {
   methods: {
     onSubmit () {
@@ -72,8 +73,16 @@ export default {
     }
   },
   async created () {
+    let code = window.location.search.split(/[?]|[&]|[=]/) && window.location.search.split(/[?]|[&]|[=]/)[2] ?
+      window.location.search.split(/[?]|[&]|[=]/)[2] : '041fiVll2J1qd64GWbnl2Vf82V3fiVlp'
+    this.$store.dispatch('setCode', code)
+    await getOath()
     let res = await getRoute();
     allVehicles = res.data
+  },
+  async getOath () {
+    let data = await getOath(this.$store.state.authCode)
+    this.$store.dispatch('setToken', data.access_token)
   }
 };
 </script>

@@ -49,10 +49,12 @@
 // import { Options, Vue } from 'vue-class-component'
 // import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 import { TimeF } from '../../util/util.js'
-import { getOath } from "../../http";
-// import mapInit from './map/mapinit.vue'
-// import buQiandao from './buqiandao.vue'
+import { getticket } from "../../http/api.js";
+import { MP } from "./map.js";
+import { hash_sha1, getString } from "../../../util/util";
+
 export default {
+
   data () {
     return {
       svgColor: '#336699',
@@ -60,11 +62,8 @@ export default {
       showMap: false,
       color: '#999'
     }  },
-  created () {
-    let code = window.location.search.split(/[?]|[&]|[=]/) && window.location.search.split(/[?]|[&]|[=]/)[2] ?
-      window.location.search.split(/[?]|[&]|[=]/)[2] : '061sC3ml2IObd640L1ll2YuhIf2sC3mm'
-    this.$store.dispatch('setCode', code)
-    getOath()
+  async created () {
+
     this.showMap = true
   },
   mounted () {
@@ -76,6 +75,18 @@ export default {
     // buQiandao
   },
   methods: {
+    initMap () {
+      let center1 = new window.TMap.LatLng(22.603842, 113.87075);
+      new window.TMap.Map("container", {
+        center: center1
+      });
+      if (window.wx) {
+
+        window.wx.ready(function () {
+          window.wx.getLocation();
+        });
+      }
+    },
     tongjiclick () {
       this.svgColor = '#999'
       this.color = '#336699'
@@ -94,45 +105,8 @@ export default {
     },
     Time (a, b) {
       return TimeF(a, b)
-    },
-    showPicker () {
-      const that = this
-      this.$weui.picker(
-        [
-          {
-            label: '兰妈食府',
-            value: 0
-          },
-          {
-            label: '小时候湘',
-            value: 1
-          },
-          {
-            label: '愿者上钩(翻身店)',
-            value: 2
-          },
-          {
-            label: '正新鸡排(翻身店)',
-            disabled: true,
-            value: 3
-          },
-          {
-            label: '天台烧烤',
-            value: 4
-          }
-        ],
-        {
-          onChange: function (result) {
-            console.log(result)
-          },
-          onConfirm: function (result) {
-            that.qiandaoPlace = result[0].label
-            console.log(result)
-          },
-          title: '当前位置'
-        }
-      )
     }
+
   }
 }
 

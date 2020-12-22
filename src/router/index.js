@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 // 引入组件
-import qiandaozongji from "../views/qiandao/qiandaozongji.vue";
+// import qiandaozongji from "";
 import qiandao from "../views/qiandao/qiandao.vue";
 import buqiandao from "../views/qiandao/buqiandao.vue";
 import tongji from "../views/qiandao/tongji.vue";
@@ -14,11 +14,11 @@ import getOath from "../views/qiandao/getOath.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  { path: '/getOath', name: 'getOath', component: getOath },
+  { path: '/', name: 'getOath', component: getOath },
   {
-    path: "/",
+    path: "/qiandaozongongji",
     name: "Home",
-    component: qiandaozongji,
+    component: () => import('../views/qiandao/qiandaozongji.vue'),
     children: [
       {
         path: '/qiandao',
