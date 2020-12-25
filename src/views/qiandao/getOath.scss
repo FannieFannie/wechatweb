@@ -8,5 +8,14 @@
     justify-content: space-between;
 }
 .el-form-item__label{
-  font-size: 0.9em;
+  font-size: 0.9em!important;
+}
+.InfoPanel{
+  width: 100%;
+  display: flex;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 0.5rem 0.5rem 0.5em;
+  background-color: white;
+  margin-bottom: 0.3em;
 }

@@ -1,15 +1,23 @@
 <template>
   <div class="home">
     <div class="content">
-      <div class="gongsi">
+      <div class="gongsi" style="margin-bottom:0px">
         <!-- <div class="weui-form__title">产废点签到</div> -->
         <div class="left font">
           <span class="size12px">
             <span class="icon iconfont"></span>{{Time(new Date(),"%y-%M-%d")}}</span>
-          <span style="display:inline-block;width:1rem">
-          </span>
+          <!-- <span style="display:inline-block;width:1rem">
+          </span> -->
           <span class="size12px">
             <span class="icon iconfont size2rem"></span> 朗坤集团</span>
+          <div class='easyPanel'>
+            <span style="display: inline-block;padding-left: 0.5em;width: 48%;">当前车辆:{{vehicle_number}}</span>
+
+            <span class="bqd">
+              <router-link to="/">切换车辆 ></router-link>
+            </span>
+
+          </div>
         </div>
       </div>
       <router-view />
@@ -55,6 +63,7 @@ import { TimeF } from '../../util/util.js'
 export default {
   data () {
     return {
+      vehicle_number: localStorage.vehicle_number,
       svgColor: '#336699',
       qiandaoPlace: '',
       showMap: false,
@@ -95,7 +104,7 @@ export default {
       this.svgColor = '#336699'
       this.$router.push({ name: 'qiandao' })
     },
-   
+
     Time (a, b) {
       return TimeF(a, b)
     }
@@ -105,4 +114,10 @@ export default {
 
 </script>
 <style scoped src="./qiandao.css">
+</style>
+<style scoped >
+.el-button--mini,
+.el-button--mini.is-round {
+  padding: 0px 0px;
+}
 </style>

@@ -1,4 +1,7 @@
 import http from "axios";
+import { getOathUtil } from "../util/util";
+import app from "../App.vue";
+import $weui from "weui.js";
 const instance = http.create({
   baseURL: process.env.BASE_API, // 该处url会根据开发环境进行变化（开发/发布）
   timeout: 10000 // 设置请求超时连接时间
@@ -18,7 +21,22 @@ instance.interceptors.request.use(
 
 // 添加一个响应拦截器
 instance.interceptors.response.use(
-  function (response) {
+  async function (response) {
+
+    console.log(app)
+    switch (response.data.code) {
+      case -1: await getOathUtil(localStorage.code);
+        app.methods.reloadPage();
+        break;
+      case 200: break;
+      default:
+        $weui.confirm('服务器内部异常，请重试', function () {
+          app.methods.reloadPage();
+        }, function () {
+          window.wx.closeWindow();
+        })
+        break;
+    }
     // 处理响应数据
     return response.data; // 返回响应数据
   },

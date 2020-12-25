@@ -1,6 +1,6 @@
 <template>
   <div class="parent">
-    <div class="weui-cells__group weui-cells__group_form">
+    <div class="weui-cells__group weui-cells__group_form" style="margin-bottom:0.3em">
       <div class="weui-cell weui-cell_active weui-cell_access">
         <div class="weui-cell__bd label">垃圾桶数</div>
         <div class="weui-cell__bd">
@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="address">平峦山公园</div>
+    <!-- <div class="address">平峦山公园</div> -->
     <div class="map" v-if="showMap">
       <map-init></map-init>
     </div>
@@ -42,7 +42,7 @@
             </div>
           </div> -->
         <div style="color:rgb(0,0,0,0.9);margin-top:1rem;text-align:center">
-          <span style="display:inline-block">今日共收运10桶</span>
+          <span style="display:inline-block">今日共收运{{count}}桶</span>
           <!-- <a href="javascript:;"
                class="weui-btn weui-btn_default">补签到</a> -->
           <span class="bqd">
@@ -59,31 +59,62 @@
 // import { hash_sha1, getString } from "../../util/util";
 // import { Options, Vue } from 'vue-class-component'
 // import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-import { TimeF,getWxconfig } from "../../util/util.js";
+import { TimeF, getWxconfig } from "../../util/util.js";
 import mapInit from "./map/mapinit.vue";
-import { signIn, getClosestKitchenList } from "../../http/api.js";
-
+import { signIn, getClosestKitchenList, getBins } from "../../http/api.js";
+let that;
 export default {
+  beforeCreate () {
+    that = this
+  },
   data () {
     return {
       form: {},
       qiandaoPlace: "",
       showMap: false,
       location: [],
-      departs: []
+      departs: [],
+      count: 0
     };
   },
   async created () {
-    this.departs = await getClosestKitchenList()
-    this.showMap = true;
+    await getWxconfig()
+    window.wx.ready(function () {
+      window.wx.getLocation({
+        type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+        success: async function (res) {
+          let departs = []
+          // var speed = res.speed; // 速度，以米/每秒计
+          // var accuracy = res.accuracy; // 位置精度
+          that.showMap = true;
+          departs = await getClosestKitchenList({
+            latitude: res.latitude,
+            longitude: res.longitude
+          })
+          that.$store.dispatch('setQl', [res.latitude, res.longitude])
+          that.departs = that.formatterDepart(departs.data)
+        },
+        fail: function () {
+          that.$weui.alert('获取定位失败，')
+        }
+      })
+    });
+    let bins = await getBins()
+    this.count = bins.data.bins
   },
-  mounted () {
+  async mounted () {
     document.getElementsByTagName("title")[0].text = "产废点签到";
   },
   components: {
     mapInit
   },
   methods: {
+    formatterDepart (arr) {
+      let arr1 = arr.map((item) => {
+        return { label: item.name, value: item.id }
+      })
+      return arr1
+    },
     // qiandaofoot () {
     //   debugger
     // },
@@ -91,36 +122,51 @@ export default {
     //   debugger
     // },
     qiandaoEvent: async () => {
-      await getWxconfig()
-      window.wx.ready(function(){
-         window.wx.getLocation({
-  type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-  success: async function (res) {
-    // var speed = res.speed; // 速度，以米/每秒计
-    // var accuracy = res.accuracy; // 位置精度
-    let data = {
-      latitude:res.latitude,longitude:res.longitude,accuracy: res.accuracy,
-        access_token: this.$store.state.access_token,
-        bins: document.getElementById('bins').getAttribute('value')
+      if (that.validateForm() == -1) {
+        return
       }
-      await signIn(data);
-      this.$weui.toast("签到成功", {
-        duration: 3000,
-        className: "bears"
-      });
-  }
-})
-      });
-      window.wx.error(function(res){
-        console.log(res)
-      })     
+      // var speed = res.speed; // 速度，以米/每秒计
+      // var accuracy = res.accuracy; // 位置精度
+
+      let data = {
+        ...{ latitude: that.$store.state.Ql[0], longitude: that.$store.state.Ql[1] },
+        access_token: localStorage.getItem('user_access_token'),
+        bins: document.getElementById('bins').value,
+        collect_id: that.collect_id,
+        vehicle_id: localStorage.vehicle_id,
+        is_supplement: '0'
+      }
+      let result = await signIn(data);
+      if (result.code == -1) {
+        // this.$weui.toast("登录信息失效，", {
+        //   duration: 3000,
+        //   className: "bears"
+        // });
+        return;
+      }
+      if (result.code == 200) {
+        that.$weui.toast("签到成功", {
+          duration: 3000,
+          className: "bears"
+        });
+      }
+
+    },
+    validateForm () {
+      if (!localStorage.vehicle_id && localStorage.vehicle_id == 'undefined') {
+        that.$weui.alert('请返回首页选择车辆')
+        return -1
+      }
+      if (document.getElementById('bins').value == '' || that.qiandaoPlace == '') {
+        that.$weui.alert('请输入餐厨桶数和产废单位！')
+        return -1
+      }
     },
     Time (a, b) {
       return TimeF(a, b);
     },
     showPicker: () => {
-      let that = this;
-      this.$weui.picker(
+      that.$weui.picker(
         // [
         //   {
         //     label: "兰妈食府",
@@ -136,13 +182,14 @@ export default {
         //     value: 3
         //   }
         // ],
-        this.departs,
+        that.departs,
         {
           onChange: function (result) {
             console.log(result);
           },
           onConfirm: function (result) {
             that.qiandaoPlace = result[0].label;
+            that.collect_id = result[0].value;
             console.log(result);
           },
           title: "当前位置"

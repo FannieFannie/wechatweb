@@ -14,7 +14,11 @@ import getOath from "../views/qiandao/getOath.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  { path: '/', name: 'getOath', component: getOath },
+  {
+    path: '/', name: 'getOath', component: getOath, meta: {
+      keepAlive: true
+    }
+  },
   {
     path: "/qiandaozongongji",
     name: "Home",
@@ -50,6 +54,18 @@ const routes = [
 var router = new VueRouter({
   routes
 })
+router.beforeEach((to, from, next) => {
+  if (localStorage.vehicle_id && localStorage.vehicle_id != 'undefined' && to.path == '/' && from.path == '/') {
+    router.push({ path: '/qiandao' })
+  }
+  console.log('beforeEach')
 
+  //next() //如果要跳转的话，一定要写上next()
+
+  //next(false) //取消了导航
+
+  next() //正常跳转，不写的话，不会跳转
+
+})
 console.log(router)
 export default router;

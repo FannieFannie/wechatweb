@@ -5,34 +5,17 @@
         <th>&#12288;</th>
         <th>签到点</th>
         <th>垃圾桶数</th>
-        <th>签到时间</th>
+        <th>签到时间</th>``
       </tr>
     </thead>
     <tbody>
-
-      <tr>
+      <tr v-for="(item,index) in logTable" :key='index'>
         <td class='number'>
-          <span class="number1">1</span>
+          <span class="number1">{{index+1}}</span>
         </td>
-        <td title="签到点">小时候湘</td>
-        <td title="垃圾桶数">3</td>
-        <td title="签到时间">2020.11.20</td>
-      </tr>
-      <tr>
-        <td class='number'>
-          <span class="number1">1</span>
-        </td>
-        <td title="签到点">麻婆豆腐</td>
-        <td title="垃圾桶数">3</td>
-        <td title="签到时间">2020.11.21</td>
-      </tr>
-      <tr>
-        <td class='number'>
-          <span class="number1">1</span>
-        </td>
-        <td title="签到点">正新鸡排</td>
-        <td title="垃圾桶数">1</td>
-        <td title="签到时间">2020.11.22</td>
+        <td title="签到点">{{item.collect_name}}</td>
+        <td title="垃圾桶数">{{item.bins}}</td>
+        <td title="签到时间">{{item.created_at}}</td>
       </tr>
     </tbody>
   </table>
@@ -42,10 +25,17 @@
 // import { Options, Vue } from 'vue-class-component'
 // import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 import { TimeF } from '../../util/util'
+import { signInLog } from "../../http/api";
 export default {
-  // components: {
-  //   HelloWorld
-  // },
+  data () {
+    return {
+      logTable: []
+    }
+  },
+  async created () {
+    let data = await signInLog()
+    this.logTable = data.data
+  },
   mounted () {
     document.getElementsByTagName('title')[0].text = '统计'
   },

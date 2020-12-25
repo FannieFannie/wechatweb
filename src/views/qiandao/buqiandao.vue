@@ -8,24 +8,17 @@
         <div class="cell weui-cell_active weui-cell_access ">
           <div class="weui-cell__hd">
             <span class="spanSelect">
-              <select name="jiedao">
-                <option value="volvo">新安</option>
-                <option value="saab">西乡</option>
-                <option value="fiat">沙井</option>
-                <option value="audi">航城</option>
-                <option value="audi">航城</option>
-                <option value="audi">航城</option>
+              <select name="jiedao" placeholder="请选择" onchange='getStreet'>
+                <option :value="item.id" v-for="(item,index) in streets" :key='index'>{{item.name}}</option>
               </select>
             </span>
           </div>
-          <span style="font-size:14px">{{qiandaoPlace}}</span>
+
           <div class="weui-cell__bd">
-            <span class="spanSelect">
-              <select name="cars">
-                <option value="volvo">小时候湘</option>
-                <option value="saab">正新鸡排</option>
-                <option value="fiat">愿者上钩</option>
-                <option value="audi">上海老馄饨</option>
+            <span class="spanSelect" placeholder="请选择">
+              <select name="cars" onclick='kitchenChoose'>
+                <option v-for='(item) in kitchens' :key='item.id' :value="item.id">{{item.name}}</option>
+
               </select>
             </span>
           </div>
@@ -34,7 +27,7 @@
       <div class="weui-cell weui-cell_active weui-cell_access ">
         <div class="weui-cell__bd label ">垃圾桶数</div>
         <div class="weui-cell__bd">
-          <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入桶数" value="">
+          <input class="weui-input" id="bins" type="number" pattern="[0-9]*" placeholder="请输入桶数" value="">
         </div>
       </div>
     </div>
@@ -57,16 +50,59 @@
 <script >
 // import { Options, Vue } from 'vue-class-component'
 // import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-import { TimeF } from '../../util/util'
+import { TimeF, getWxconfig } from '../../util/util'
+import { signIn, getStreet, getkicthenByStreet } from "../../http/api";
 // import mapInit from './map/mapinit.vue'
 // import buQiandao from './buqiandao.vue'
+let that
 export default {
   // created(){
   //   document.getElementsByTagName('title').innerText='产废点补签到'
   // },
+  async beforeCreate () {
+    that = this
+    let data1 = await getStreet()
+    that.streets = data1.data
+    let data2 = await getkicthenByStreet()
+    that.street = that.streets[0].id
+    that.kitchenAll = data2.data
+    that.kitchens = data2.data.filter(item => {
+      return item.street == that.street
+    })
+    that.collect_id = that.kitchens[0].id
+  },
+  async created () {
+    let data = {
+      access_token: localStorage.getItem('user_access_token'),
+      bins: 0,
+      collect_id: that.collect_id,
+      vehicle_id: localStorage.vehicle_id,
+      is_supplement: '1'
+    }
+    await getWxconfig()
+    window.wx.getLocation({
+      type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+      success: async function (res) {
+        // var speed = res.speed; // 速度，以米/每秒计
+        // var accuracy = res.accuracy; // 位置精度
+        that.$store.dispatch('setBql', [res.latitude, res.longitude])
+        that.data = {          ...data, ...{            latitude: that.$store.state.Bql[0],
+            bins: document.getElementById('bins').value, longitude: that.$store.state.Bql[1]          }        }
+        // this.$store.dispatch('setBql', res.latitude)          
+      },
+      fail: function () {
+        that.data = { ...data, ...{ bins: document.getElementById('bins').value, latitude: '', longitude: '' } }
+      }
+    })
+  },
   data () {
     return {
-      qiandaoPlace: ''
+      data: {},
+      kitchens: [],
+      streets: [],
+      collect_id: '',
+      kitchenAll: [],
+      street: ''
     }
   },
   mounted () {
@@ -78,62 +114,52 @@ export default {
     // buQiandao
   },
   methods: {
+    kitchenChoose () {
+      that.kitchens = that.kitchenAll.filter(item => {
+        return item.street == that.street
+      })
+    },
     // qiandaofoot () {
     //   debugger
     // },
+    getStreet () {
+      // that.kitchen = that.kitchenAll.filter(item => {
+      //   return item.street == that.street
+      // })
+      // that.street
+    },
     tongji () {
       this.$router.push({ name: 'tongji' })
     },
-    buqiandao () {
-      debugger
+
+    async qiandaoEvent () {
+      if (that.validateForm() == -1) {
+        return
+      }
+
+      await signIn(that.data);
+      that.$weui.toast("签到成功", {
+        duration: 3000,
+        className: "bears"
+      });
+
+
     },
-    qiandaoEvent () {
-      this.$weui.toast('签到成功', {
-        duration: 1000,
-        className: 'bears'
-      })
+    validateForm () {
+      if (!localStorage.vehicle_id || localStorage.vehicle_id == 'undefined') {
+        that.$weui.alert('请返回首页选择车辆')
+        return -1
+      }
+      that.collect_id
+      if (document.getElementById('bins').value == '' || !that.collect_id) {
+        that.$weui.alert('请输入餐厨桶数和产废单位！')
+        return -1
+      }
     },
     Time (a, b) {
       return TimeF(a, b)
-    },
-    showPicker () {
-      const that = this
-      this.$weui.picker(
-        [
-          {
-            label: '兰妈食府',
-            value: 0
-          },
-          {
-            label: '小时候湘',
-            value: 1
-          },
-          {
-            label: '愿者上钩(翻身店)',
-            value: 2
-          },
-          {
-            label: '正新鸡排(翻身店)',
-            disabled: true,
-            value: 3
-          },
-          {
-            label: '天台烧烤',
-            value: 4
-          }
-        ],
-        {
-          onChange: function (result) {
-            console.log(result)
-          },
-          onConfirm: function (result) {
-            that.qiandaoPlace = result[0].label
-            console.log(result)
-          },
-          title: '当前位置'
-        }
-      )
     }
+
   }
 }
 
