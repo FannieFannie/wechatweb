@@ -1,50 +1,60 @@
 <template>
-  <table>
-    <thead>
-      <tr>
-        <th>&#12288;</th>
-        <th>签到点</th>
-        <th>垃圾桶数</th>
-        <th>签到时间</th>``
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(item,index) in logTable" :key='index'>
-        <td class='number'>
-          <span class="number1">{{index+1}}</span>
-        </td>
-        <td title="签到点">{{item.collect_name}}</td>
-        <td title="垃圾桶数">{{item.bins}}</td>
-        <td title="签到时间">{{item.created_at}}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div style="height: calc(100% - 1.3em);overflow: scroll;">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 10%">&#12288;</th>
+          <th>签到点</th>
+          <th>垃圾桶数</th>
+          <th>签到时间</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in logTable" :key="index">
+          <td class="number">
+            <span class="number1">{{ index + 1 }}</span>
+          </td>
+          <td title="签到点">{{ item.collect_name }}</td>
+          <td title="垃圾桶数">{{ item.bins }}</td>
+          <td title="签到时间">{{ item.created_at }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
-// import { Options, Vue } from 'vue-class-component'
-// import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-import { TimeF } from '../../util/util'
+import { TimeF } from "../../util/util";
 import { signInLog } from "../../http/api";
+// eslint-disable-next-line no-unused-vars
+let that;
 export default {
+  beforeCreate () {
+    that = this;
+  },
+  inject: ['eventBus'],
   data () {
     return {
       logTable: []
-    }
+    };
   },
+
   async created () {
-    let data = await signInLog()
-    this.logTable = data.data
+    // this.showVehicle=false
+    this.eventBus.$emit('update:selected', false)
+    let data = await signInLog();
+    this.logTable = data.data;
   },
   mounted () {
-    document.getElementsByTagName('title')[0].text = '统计'
+    document.getElementsByTagName("title")[0].text = "统计";
   },
   methods: {
     qiandaofoot () {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     Time (a, b) {
-      return TimeF(a, b)
+      return TimeF(a, b);
     }
     // qiandaofoot($event){
     //   document.getElementById('icon-icon-test2').firstChild.setAttribute('fill','#0066ff')
@@ -53,12 +63,10 @@ export default {
     //   document.getElementsByClassName('footer2')[0].style.color='rgb(0,0,0,0.7)'
     // },
   }
-}
-
+};
 </script>
-<style scoped src="./qiandao.css">
-</style>
-<style scoped >
+<style scoped src="./qiandao.css"></style>
+<style scoped>
 weui-table,
 table {
   width: 100%;
@@ -68,9 +76,10 @@ table {
   text-align: center;
   border: none;
 }
+
 .content {
-  margin-left: 5%;
-  width: 90%;
+  margin-left: 0 !important;
+  width: 100% !important;
 }
 * {
   margin: 0;
@@ -100,8 +109,8 @@ user agent stylesheet table {
   width: 1.2rem;
   box-shadow: 1px 0px 2px 1px rgba(0, 0, 0, 0.7);
 }
+
 /* #app {
  
 } */
 </style>
-

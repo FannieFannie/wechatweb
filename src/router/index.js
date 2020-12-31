@@ -1,12 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
+import $store from "../store";
 // 引入组件
 // import qiandaozongji from "";
 import qiandao from "../views/qiandao/qiandao.vue";
 import buqiandao from "../views/qiandao/buqiandao.vue";
 import tongji from "../views/qiandao/tongji.vue";
 import getOath from "../views/qiandao/getOath.vue";
+import { getUrlParam } from "../util/util.js";
 // import home from "../views/Home.vue";
 // import about from "../views/About.vue";
 
@@ -55,10 +56,14 @@ var router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-  if (localStorage.vehicle_id && localStorage.vehicle_id != 'undefined' && to.path == '/' && from.path == '/') {
+
+  if (localStorage.vehicle_id && localStorage.vehicle_id != 'undefined'
+    && to.path == '/' && from.path == '/') {
+    let code = getUrlParam('code')
+    $store.dispatch('setCode', code)
+    localStorage.setItem('code', code)
     router.push({ path: '/qiandao' })
   }
-  console.log('beforeEach')
 
   //next() //如果要跳转的话，一定要写上next()
 
@@ -67,5 +72,4 @@ router.beforeEach((to, from, next) => {
   next() //正常跳转，不写的话，不会跳转
 
 })
-console.log(router)
 export default router;

@@ -23,14 +23,14 @@
 
     <!-- <div class="address">平峦山公园</div> -->
     <div class="map" v-if="showMap">
-      <map-init></map-init>
+
     </div>
     <div class="lastkuai">
       <div>
         <div style="position:relative;text-align:center;">
           <i @click="qiandaoEvent" class="iconfont icon-weibiaoti--copy"></i>
-          <div class="qiandao">
-            <div style="margin-bottom:1rem" @click="qiandaoEvent">
+          <div class="qiandao" @click="qiandaoEvent">
+            <div style="margin-bottom:1rem">
               {{ Time(new Date(), "%h:%m") }}
             </div>
             <div>签到</div>
@@ -42,11 +42,11 @@
             </div>
           </div> -->
         <div style="color:rgb(0,0,0,0.9);margin-top:1rem;text-align:center">
-          <span style="display:inline-block">今日共收运{{count}}桶</span>
+          <span style="display:inline-block">今日共收运{{count}}桶    </span>
           <!-- <a href="javascript:;"
                class="weui-btn weui-btn_default">补签到</a> -->
-          <span class="bqd">
-            <router-link to="/buqiandao">补签到</router-link>
+          <span class="bqd" >
+            <router-link to="/buqiandao">点击补签到</router-link>
           </span>
         </div>
       </div>
@@ -60,10 +60,11 @@
 // import { Options, Vue } from 'vue-class-component'
 // import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 import { TimeF, getWxconfig } from "../../util/util.js";
-import mapInit from "./map/mapinit.vue";
+// import mapInit from "./map/mapinit.vue";
 import { signIn, getClosestKitchenList, getBins } from "../../http/api.js";
 let that;
 export default {
+ inject:['eventBus'],
   beforeCreate () {
     that = this
   },
@@ -78,6 +79,7 @@ export default {
     };
   },
   async created () {
+    this.eventBus.$emit('update:selected', true)
     await getWxconfig()
     window.wx.ready(function () {
       window.wx.getLocation({
@@ -86,7 +88,7 @@ export default {
           let departs = []
           // var speed = res.speed; // 速度，以米/每秒计
           // var accuracy = res.accuracy; // 位置精度
-          that.showMap = true;
+          // that.showMap = true;
           departs = await getClosestKitchenList({
             latitude: res.latitude,
             longitude: res.longitude
@@ -102,13 +104,16 @@ export default {
     let bins = await getBins()
     this.count = bins.data.bins
   },
-  async mounted () {
+   mounted () {
     document.getElementsByTagName("title")[0].text = "产废点签到";
   },
   components: {
-    mapInit
+
   },
   methods: {
+    changeHeight(){
+      // document.documentElement.clientHeight=localStorage.height+'px'
+    },
     formatterDepart (arr) {
       let arr1 = arr.map((item) => {
         return { label: item.name, value: item.id }
@@ -147,8 +152,10 @@ export default {
       if (result.code == 200) {
         that.$weui.toast("签到成功", {
           duration: 3000,
-          className: "bears"
+          className: "bears",
+          callback: function(){ that.$router.push({ name: 'tongji' })}
         });
+
       }
 
     },
@@ -157,7 +164,7 @@ export default {
         that.$weui.alert('请返回首页选择车辆')
         return -1
       }
-      if (document.getElementById('bins').value == '' || that.qiandaoPlace == '') {
+      if (!document.getElementById('bins').value||document.getElementById('bins').value == '' || that.qiandaoPlace == '') {
         that.$weui.alert('请输入餐厨桶数和产废单位！')
         return -1
       }

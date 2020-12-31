@@ -20,7 +20,7 @@ export default {
 
   },
   async mounted () {
-    debugger
+    
     if (!window.TMap) {
       window.TMap = await MP();
       this.initMap()

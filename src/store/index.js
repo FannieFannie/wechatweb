@@ -9,9 +9,11 @@ const store = new Vuex.Store({
     ticketInfo: {},
     vehicle_id: '',
     Bql: '',
-    Ql: ''
+    Ql: '',
+    qiandao: false,
   },
   mutations: {
+    setQiandao (state, qiandao) { state.qiandao = qiandao },
     setQl (state, Ql) {
       state.Ql = Ql
     },
@@ -35,6 +37,7 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    setQiandao (context, qiandao) { context.commit('setQiandao', qiandao) },
     setQl (context, Ql) {
       context.commit('setQl', Ql)
     },

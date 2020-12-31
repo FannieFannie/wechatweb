@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%;width:100%" v-if="!reload">
+  <div :style="{height: bodyHeight + 'px',width:'100%'}" v-if="!reload">
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive">
         <!-- 这里是会被缓存的视图组件，比如 Home！ -->
@@ -21,8 +21,22 @@ export default {
   beforeCreate () {
     that = this
   },
+  created () {
+    // this.eventBusinput.$on('update:height', a => {
+    //   this.showVehicle = a
+    // })
+    // window.onresize = function () {
+    //   alert(document.documentElement.clientHeight)
+    // }
+  },
+  mounted () {
+
+    this.bodyHeight = document.documentElement.clientHeight
+
+  },
   data: function () {
     return {
+      bodyHeight: 0,
       reload: false
     }
   },

@@ -5,8 +5,8 @@
       <div style="margin-top: 0.5em;width: 30%;">
         个人信息
       </div>
-      <div style="display:flex;width:70%">
-        <div style="width: 10%;"><img style="height:1em" :src="avartar" /></div>
+      <div style="display:flex;width:70%;margin-top:0.5em">
+        <div style="width: 12%;"><img style="height:1.2em" :src="avartar" /></div>
         <div>{{nickname}}</div>
 
       </div>
@@ -43,7 +43,7 @@
 <script>
 let allVehicles = []
 import { getRoute } from "../../http/api";
-import { getOathUtil } from "../../util/util.js";
+import { getOathUtil, getUrlParam } from "../../util/util.js";
 
 export default {
   methods: {
@@ -51,9 +51,11 @@ export default {
       window.scroll(0, 0)
     },
     async getOath () {
+
       if (!localStorage.getItem('user_access_token') || localStorage.user_access_token == 'undefined') {
-        getOathUtil()
-      } else {
+        await getOathUtil()
+      }
+      if (localStorage.user_info && localStorage.user_access_token != 'undefined') {
         this.nickname = JSON.parse(localStorage.user_info).name
         this.avartar = JSON.parse(localStorage.user_info).avatar
       }
@@ -106,8 +108,8 @@ export default {
     let height = document.getElementsByTagName('html')[0].clientHeight
     localStorage.setItem('height', height)
     document.getElementsByTagName('title')[0].text = '产废点补签到'
-    let code = window.location.search.split(/[?]|[&]|[=]/) && window.location.search.split(/[?]|[&]|[=]/)[2] ?
-      window.location.search.split(/[?]|[&]|[=]/)[2] : '011L03000hR0SK1ACZ200T8iir0L030n'
+    let code = getUrlParam('code')
+    console.log(code)
     this.$store.dispatch('setCode', code)
     localStorage.setItem('code', code)
     await this.getOath()

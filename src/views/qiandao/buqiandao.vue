@@ -6,21 +6,16 @@
           补签街道-产废单位
         </div>
         <div class="cell weui-cell_active weui-cell_access ">
-          <div class="weui-cell__hd">
-            <span class="spanSelect">
-              <select name="jiedao" placeholder="请选择" onchange='getStreet'>
-                <option :value="item.id" v-for="(item,index) in streets" :key='index'>{{item.name}}</option>
-              </select>
-            </span>
+          <div class="weui-cell__hd" style="padding-right: 0.2em;">
+            <el-select name="jiedao" placeholder="请选择" @change='getStreet' v-model.number="street" size='mini'>
+              <el-option :value="item.id" v-for="(item,index) in streets" :key='index' :label="item.name"></el-option>
+            </el-select>
           </div>
 
           <div class="weui-cell__bd">
-            <span class="spanSelect" placeholder="请选择">
-              <select name="cars" onclick='kitchenChoose'>
-                <option v-for='(item) in kitchens' :key='item.id' :value="item.id">{{item.name}}</option>
-
-              </select>
-            </span>
+            <el-select name="cars" placeholder="请选择" v-model.number="collect_id" size='mini' allow-create filterable>
+              <el-option v-for='(item) in kitchens' :key='item.id' :value="item.id" :label="item.name"></el-option>
+            </el-select>
           </div>
         </div>
       </div>
@@ -35,8 +30,8 @@
       <div>
         <div style="position:relative;text-align:center;">
           <i @click="qiandaoEvent" class='iconfont icon-weibiaoti--copy'></i>
-          <div class="qiandao">
-            <div style="margin-bottom:1rem" @click="qiandaoEvent">
+          <div @click="qiandaoEvent" class="qiandao">
+            <div style="margin-bottom:1rem">
               {{Time(new Date(),"%h:%m")}}</div>
             <div>签到</div>
           </div>
@@ -59,6 +54,7 @@ export default {
   // created(){
   //   document.getElementsByTagName('title').innerText='产废点补签到'
   // },
+  inject: ['eventBus'],
   async beforeCreate () {
     that = this
     let data1 = await getStreet()
@@ -72,6 +68,7 @@ export default {
     that.collect_id = that.kitchens[0].id
   },
   async created () {
+    this.eventBus.$emit('update:selected', true)
     let data = {
       access_token: localStorage.getItem('user_access_token'),
       bins: 0,
@@ -100,9 +97,10 @@ export default {
       data: {},
       kitchens: [],
       streets: [],
-      collect_id: '',
+      collect_id: 1,
       kitchenAll: [],
       street: ''
+
     }
   },
   mounted () {
@@ -115,18 +113,18 @@ export default {
   },
   methods: {
     kitchenChoose () {
-      that.kitchens = that.kitchenAll.filter(item => {
-        return item.street == that.street
-      })
+      // that.kitchens = that.kitchenAll.filter(item => {
+      //   return item.street == that.street
+      // })
     },
     // qiandaofoot () {
     //   debugger
     // },
     getStreet () {
-      // that.kitchen = that.kitchenAll.filter(item => {
-      //   return item.street == that.street
-      // })
-      // that.street
+      that.kitchens = that.kitchenAll.filter(item => {
+        return item.street == that.street
+      })
+      that.collect_id = that.kitchens[0].id
     },
     tongji () {
       this.$router.push({ name: 'tongji' })
@@ -137,11 +135,16 @@ export default {
         return
       }
 
-      await signIn(that.data);
-      that.$weui.toast("签到成功", {
-        duration: 3000,
-        className: "bears"
-      });
+      that.data = {        ...that.data, ...{          bins: document.getElementById('bins').value, collect_id: that.collect_id,
+          latitude: '', longitude: ''        }      }
+      let res = await signIn(that.data);
+      if (res.code == 200) {
+        that.$weui.toast("签到成功", {
+          duration: 3000,
+          className: "bears",
+          callback: function () { that.$router.push({ name: 'tongji' }) }
+        });
+      }
 
 
     },

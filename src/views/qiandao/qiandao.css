@@ -20,6 +20,10 @@ html {
     height: 1.5rem;
     width: 100%;
 }
+svg#icon-tongji{
+    height: 1.3rem;
+    width: 100%;
+}
   body {
     line-height: 1.0;
     height: 100%;
@@ -27,7 +31,7 @@ html {
     flex-direction: column;
   }
   .content {
-    min-height: 90vh;
+    height: 91%;
     width: 90%;
     margin-left: 5%;
     display: flex;
@@ -36,7 +40,7 @@ html {
  /* .icon{} */
  .footer{
      display: flex;
-     height: 8vh;
+     height: 8%;
      font-size: 12px;
      box-shadow: 0 -3px 5px 0 rgb(0 0 0 / 0.05);
      border-radius: 4px;
@@ -84,13 +88,13 @@ margin-bottom: 1rem;
 .weui-cells {
   margin-top: 0px;}
 .map{
-  height: 10vh;
+  height: 14%;
   width: 100%;
   margin: 0 auto;
 }
 i.iconfont.icon-weibiaoti--copy {
   color: orange;
-  font-size: 8rem;
+  font-size: 9.5rem;
 }
 .size12px{
   font-size: 12px;
@@ -149,16 +153,28 @@ i.iconfont.icon-weibiaoti--copy {
     padding-right: 0px;    
   }
   .bqd{
+      font-size: 1.5em;
+    background-color: #663399;
+    display: inline-block;
+    padding: 0 1rem;
+    line-height: 2;
+    border-radius: 4px;
+    margin-left: 0.2rem;
+  }
+  .bqd a{
+    color: white;
+  }
+.bqdVehicle{
     background-color: orange;
     display: inline-block;
     padding: 0 1rem;
     line-height: 2.411765;
     border-radius: 4px;
     margin-left: 1rem;
-  }
-  .bqd a{
+}
+.bqdVehicle a{
     color: white;
-  }
+}
   select{
     line-height:1.5rem;
     border: none;
@@ -186,4 +202,7 @@ i.iconfont.icon-weibiaoti--copy {
   }
   #container{
     border-radius: 4px;
+  }
+.el-select-dropdown__item{
+      max-width: 250px;
   }

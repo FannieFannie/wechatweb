@@ -25,7 +25,8 @@ instance.interceptors.response.use(
 
     console.log(app)
     switch (response.data.code) {
-      case -1: await getOathUtil(localStorage.code);
+      case -1: 
+      await getOathUtil(localStorage.code);
         app.methods.reloadPage();
         break;
       case 200: break;
