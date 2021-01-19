@@ -93,7 +93,6 @@ export default {
         center: center1
       });
       if (window.wx) {
-
         window.wx.ready(function () {
           window.wx.getLocation();
         });

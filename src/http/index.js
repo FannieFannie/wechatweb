@@ -11,6 +11,8 @@ const instance = http.create({
 instance.interceptors.request.use(
   function (config) {
     // 发起请求前执行一些处理任务
+    // config.headers={...config.headers,}
+
     return config; // 返回配置信息
   },
   function (error) {
@@ -22,14 +24,13 @@ instance.interceptors.request.use(
 // 添加一个响应拦截器
 instance.interceptors.response.use(
   async function (response) {
-
-    console.log(app)
     switch (response.data.code) {
-      case -1: 
-      await getOathUtil(localStorage.code);
+      case -1:
+        await getOathUtil(localStorage.code);
         app.methods.reloadPage();
         break;
       case 200: break;
+      // case 422: window.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx64aa611897a94330&response_type=code&scope=snsapi_userinfo&redirect_uri=http://testbaoan.leoking.com?page=weixiu#wechat_redirect';
       default:
         $weui.confirm('服务器内部异常，请重试', function () {
           app.methods.reloadPage();

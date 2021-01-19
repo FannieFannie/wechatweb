@@ -6,8 +6,13 @@ import $store from "../store";
 import qiandao from "../views/qiandao/qiandao.vue";
 import buqiandao from "../views/qiandao/buqiandao.vue";
 import tongji from "../views/qiandao/tongji.vue";
+import upload from '../views/weixiu/upload.vue'
 import getOath from "../views/qiandao/getOath.vue";
-import { getUrlParam } from "../util/util.js";
+import { getOathUtil, getUrlParam } from "../util/util.js";
+import weixiu from "../views/weixiu/weixiu.vue";
+import repairLog from '../views/weixiu/repairLog.vue'
+import weixiufooter from '../views/weixiu/weixiuFooter.vue'
+import repairDetail from '../views/weixiu/detail.vue'
 // import home from "../views/Home.vue";
 // import about from "../views/About.vue";
 
@@ -41,6 +46,31 @@ const routes = [
         component: tongji
       }
     ]
+  }, {
+    path: '/upload',
+    name: 'upload',
+    component: upload
+  }, {
+    path: '/weixinfooter',
+    component: weixiufooter,
+    name: weixiufooter,
+    children: [{
+      path: '/repair',
+      name: 'repair',
+      component: weixiu,
+      meta: {
+        keepAlive: true
+      }
+    }, {
+      path: '/repairLog',
+      name: 'repairLog',
+      component: repairLog
+    }],
+
+  }, {
+    path: '/repairDetail',
+    name: 'repairDetail',
+    component: repairDetail
   }
   // {
   //   path: "/home",
@@ -55,14 +85,23 @@ const routes = [
 var router = new VueRouter({
   routes
 })
-router.beforeEach((to, from, next) => {
-
+router.beforeEach(async (to, from, next) => {
+  let code = getUrlParam('code')
+  $store.dispatch('setCode', code)
+  localStorage.setItem('code', code)
+  let state = getUrlParam('state')
   if (localStorage.vehicle_id && localStorage.vehicle_id != 'undefined'
-    && to.path == '/' && from.path == '/') {
+    && to.path == '/' && from.path == '/' && !state) {
     let code = getUrlParam('code')
     $store.dispatch('setCode', code)
     localStorage.setItem('code', code)
     router.push({ path: '/qiandao' })
+  }
+  if (state == "weixiu" && to.query.nextpage !== 'repair' && to.path == '/') {
+    if (!localStorage.user_access_token || localStorage.user_access_token == 'undefined') {
+      await getOathUtil()
+    }
+    router.push({ path: '/repair', query: { nextpage: 'repair' } })
   }
 
   //next() //如果要跳转的话，一定要写上next()

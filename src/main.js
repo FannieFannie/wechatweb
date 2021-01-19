@@ -8,6 +8,7 @@ import store from "./store";
 // import 'element-ui/lib/theme-chalk/index.css';
 import './assets/iconfont/iconfont.css'
 import "./assets/public.css";
+import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.$weui = weui;
 Vue.config.productionTip = false;
 

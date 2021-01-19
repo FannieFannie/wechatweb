@@ -64,3 +64,33 @@ export function getkicthenByStreet (data) {
     params: data
   })
 }
+export function submitPicture (data) {
+  return http({
+    method: 'get',
+    url: 'http://server.leoking.com/api/common/upload_img',
+    data: data
+  })
+}
+export function submitweixiu (data) {
+  return http({
+    // headers: { 'content-type': 'application/x-www-form-urlencoded' },
+
+    method: 'get',
+    url: 'http://server.leoking.com/api/vehicle/addRepairLog',
+    params: { ...data, access_token: localStorage.getItem('user_access_token') }
+  })
+}
+export function getWeixiuLogs (data) {
+  return http({
+    method: 'get',
+    url: 'http://server.leoking.com/api/vehicle/repairLogList',
+    params: { ...data, access_token: localStorage.getItem('user_access_token') }
+  })
+}
+export function repairLogInfo (data) {
+  return http({
+    method: 'get',
+    url: 'http://server.leoking.com/api/vehicle/repairLogInfo',
+    params: { ...data, access_token: localStorage.getItem('user_access_token') }
+  })
+}

@@ -66,3 +66,17 @@ body{
 .weui-input {
   color: rgba(0, 0, 0, 0.45);
 }
+.spanPanel{
+  display: inline-block;
+  background-color: white;
+  border-radius: 10px;
+  padding: 0.7em 0.7em;
+  border-radius: 10px;
+  font-size: 0.8em;
+}
+.hidden .weui-gallery__opr {
+  display: none;
+}
+.bushanchu .weui-gallery__opr {
+  display: none;
+}

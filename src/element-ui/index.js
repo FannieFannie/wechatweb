@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import {
   Input,
+  Dialog,
   InputNumber,
   Select,
   Option,
@@ -28,10 +29,6 @@ import {
   Badge,
   Card,
   Rate,
-
-
-
-
   Loading,
   MessageBox,
   Message,
@@ -40,6 +37,7 @@ import {
 
 
 Vue.use(Input);
+Vue.use(Dialog);
 Vue.use(InputNumber);
 Vue.use(Select);
 Vue.use(Option);

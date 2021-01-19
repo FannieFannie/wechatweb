@@ -4,7 +4,7 @@
       <div class="weui-cell weui-cell_active weui-cell_access">
         <div class="weui-cell__bd label">垃圾桶数</div>
         <div class="weui-cell__bd">
-          <input id="bins" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入桶数" value="" />
+          <input id="bins" class="weui-input" type="number" @keyup="tongshuEvent($event)" placeholder="请输入桶数" value="" />
         </div>
       </div>
 
@@ -14,9 +14,10 @@
         </div>
 
         <div class="weui-cell__bd" style="font-weight:100;font-weight: lighter;color: #00000073;" id="showPicker" @click="showPicker">
-          <span v-show="!qiandaoPlace">请选择</span>
+          <span v-show="!qiandaoPlace&&departs.length>0">请选择</span>
           <span v-show="qiandaoPlace" style="color:var(--weui-FG-0);">{{ qiandaoPlace }}
           </span>
+          <span v-show="!qiandaoPlace&&departs.length==0">附近无产废单位</span>
         </div>
       </div>
     </div>
@@ -42,10 +43,10 @@
             </div>
           </div> -->
         <div style="color:rgb(0,0,0,0.9);margin-top:1rem;text-align:center">
-          <span style="display:inline-block">今日共收运{{count}}桶    </span>
+          <span style="display:inline-block">今日共收运{{count}}桶 </span>
           <!-- <a href="javascript:;"
                class="weui-btn weui-btn_default">补签到</a> -->
-          <span class="bqd" >
+          <span class="bqd">
             <router-link to="/buqiandao">点击补签到</router-link>
           </span>
         </div>
@@ -64,7 +65,7 @@ import { TimeF, getWxconfig } from "../../util/util.js";
 import { signIn, getClosestKitchenList, getBins } from "../../http/api.js";
 let that;
 export default {
- inject:['eventBus'],
+  inject: ['eventBus'],
   beforeCreate () {
     that = this
   },
@@ -85,6 +86,8 @@ export default {
       window.wx.getLocation({
         type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
         success: async function (res) {
+          // that.$store.dispatch('setQiandao', true)
+          if (window.loading) { window.loading.hide() }
           let departs = []
           // var speed = res.speed; // 速度，以米/每秒计
           // var accuracy = res.accuracy; // 位置精度
@@ -97,21 +100,31 @@ export default {
           that.departs = that.formatterDepart(departs.data)
         },
         fail: function () {
-          that.$weui.alert('获取定位失败，')
+          // this.$store.dispatch('setQiandao', false)
+          that.$weui.alert('获取定位失败')
         }
       })
     });
     let bins = await getBins()
     this.count = bins.data.bins
   },
-   mounted () {
+  mounted () {
     document.getElementsByTagName("title")[0].text = "产废点签到";
   },
   components: {
 
   },
   methods: {
-    changeHeight(){
+    tongshuEvent ($event) {
+
+      if ($event.currentTarget.value.length === 2 && $event.currentTarget.value.substr(0, 1) == 0) {
+        $event.currentTarget.value = $event.currentTarget.value.substr(0, 1) + ''
+      }
+      if (['+', '-'].includes($event.currentTarget.value) || !$event.currentTarget.value) {
+        $event.currentTarget.value = $event.currentTarget.value.substring(0, $event.currentTarget.value.length - 1) + ''
+      }
+    },
+    changeHeight () {
       // document.documentElement.clientHeight=localStorage.height+'px'
     },
     formatterDepart (arr) {
@@ -153,7 +166,7 @@ export default {
         that.$weui.toast("签到成功", {
           duration: 3000,
           className: "bears",
-          callback: function(){ that.$router.push({ name: 'tongji' })}
+          callback: function () { that.$router.push({ name: 'tongji' }) }
         });
 
       }
@@ -164,7 +177,7 @@ export default {
         that.$weui.alert('请返回首页选择车辆')
         return -1
       }
-      if (!document.getElementById('bins').value||document.getElementById('bins').value == '' || that.qiandaoPlace == '') {
+      if (!document.getElementById('bins').value || document.getElementById('bins').value == '' || that.qiandaoPlace == '') {
         that.$weui.alert('请输入餐厨桶数和产废单位！')
         return -1
       }
@@ -205,5 +218,7 @@ export default {
     }
   }
 };
+
+
 </script>
 <style scoped src="./qiandao.css"></style>

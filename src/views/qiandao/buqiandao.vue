@@ -121,9 +121,15 @@ export default {
     //   debugger
     // },
     getStreet () {
+     
       that.kitchens = that.kitchenAll.filter(item => {
-        return item.street == that.street
+        if(item.street==4){
+          console.log(item)
+          debugger
+        }
+        return parseInt(item.street) == that.street
       })
+      
       that.collect_id = that.kitchens[0].id
     },
     tongji () {

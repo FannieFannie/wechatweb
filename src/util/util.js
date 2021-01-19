@@ -2,7 +2,7 @@ import Time from "time.js";
 import { getOath, getSgn } from "../http/api.js";
 import { wxs } from "./wx/wx.js"
 import $store from "../store";
-import $weui from "../we-ui/index.ts";
+import $weui from "../we-ui/index.js";
 import router from '../router'
 
 
