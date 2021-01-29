@@ -13,7 +13,7 @@
           </div>
 
           <div class="weui-cell__bd">
-            <el-select name="cars" placeholder="请选择" v-model.number="collect_id" size='mini' allow-create filterable>
+            <el-select name="cars" placeholder="请选择" v-model.number="collect_id" size='mini' filterable>
               <el-option v-for='(item) in kitchens' :key='item.id' :value="item.id" :label="item.name"></el-option>
             </el-select>
           </div>
@@ -121,15 +121,15 @@ export default {
     //   debugger
     // },
     getStreet () {
-     
+
       that.kitchens = that.kitchenAll.filter(item => {
-        if(item.street==4){
+        if (item.street == 4) {
           console.log(item)
           debugger
         }
         return parseInt(item.street) == that.street
       })
-      
+
       that.collect_id = that.kitchens[0].id
     },
     tongji () {

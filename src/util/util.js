@@ -8,9 +8,11 @@ import router from '../router'
 
 // import { hash_sha1, getString } from "../../../util/util";
 // import { getticket } from "../http/api";
+//时间格式化工具
 export function TimeF (a, b) {
   return Time(a, b);
 }
+//排序函数
 export function sort_ascii (obj) {
   let arr = new Array();
   let num = 0;
@@ -32,6 +34,7 @@ export function sort_ascii (obj) {
   //return sortObj;
 }
 
+//获得sha1字符串
 export function getsha1String (jsapi_ticket, noncestr, timestamp, url) {
   return (
     "jsapi_ticket=" +
